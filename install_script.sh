@@ -185,10 +185,11 @@ EOF
     echo ""
     mkdir /var/www/fusio
     wget -P /var/www/fusio https://github.com/apioo/fusio/releases/download/v1.7.0/fusio_1.7.0.zip
-    unzip /var/www/fusio/fusio_1.7.0.zip
+    unzip /var/www/fusio/fusio_1.7.0.zip -d /var/www/fusio
     rm /var/www/fusio/fusio_1.7.0.zip /var/www/fusio/composer.lock
     cd /var/www/fusio
     composer install
+    chmod -r 755 /var/www/fusio
 
 
     # Restart nginx and php-fpm
@@ -205,7 +206,7 @@ EOF
 
 # The sub main function, use to call neccessary functions of installation
 f_sub_main () {
-    f_update_os
+    #f_update_os
     f_install_lemp
 }
 
