@@ -1,4 +1,7 @@
 #!/bin/bash
+# This script adapted by Damian Testa to facilitate one-click Fusio install.
+# Original comments includeded below
+#--------------------------------------------------
 # Script author: Danie Pham
 # Script site: https://www.writebash.com
 # Script date: 07-03-2019
@@ -100,8 +103,10 @@ f_install_lemp () {
     echo ""
     sleep 1
     apt install mariadb-server -y
+    echo "What was the root MariaDB password you chose?"
+    read -sp 'Password: ' passvar
     systemctl enable mysql && systemctl start mysql
-    mysql -u root -p -e "create table fusio;"
+    mysql -u root -p $passvar -e "create table fusio;"
     echo ""
     sleep 1
 
@@ -186,10 +191,12 @@ EOF
     mkdir /var/www/fusio
     wget -P /var/www/fusio https://github.com/apioo/fusio/releases/download/v1.7.0/fusio_1.7.0.zip
     unzip /var/www/fusio/fusio_1.7.0.zip -d /var/www/fusio
+    chown -R nginx:nginx /var/www/fusio
+    chmod -r 755 /var/www/fusio
     rm /var/www/fusio/fusio_1.7.0.zip /var/www/fusio/composer.lock
     cd /var/www/fusio
     composer install
-    chmod -r 755 /var/www/fusio
+
 
 
     # Restart nginx and php-fpm
