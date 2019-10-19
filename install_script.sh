@@ -107,6 +107,7 @@ f_install_lemp () {
     read -sp 'Password: ' passvar
     systemctl enable mysql && systemctl start mysql
     mysql -u root -p $passvar -e "create database fusio;"
+    echo "Fusio database created"
     echo ""
     sleep 1
 
@@ -147,26 +148,26 @@ f_install_lemp () {
     sed -i 's:;listen.mode = 0660:listen.mode = 0660:g' /etc/php/7.3/fpm/pool.d/www.conf
 
     # Create web root directory and php info file
-    echo "Create web root directory and PHP info file ..."
-    echo ""
-    sleep 1
-    mkdir /etc/nginx/html
-    echo "<?php phpinfo(); ?>" > /etc/nginx/html/info.php
-    chown -R nginx:nginx /etc/nginx/html
+    #echo "Create web root directory and PHP info file ..."
+    #echo ""
+    #sleep 1
+    #mkdir /etc/nginx/html
+    #echo "<?php phpinfo(); ?>" > /etc/nginx/html/info.php
+    #chown -R nginx:nginx /etc/nginx/html
 
     # Create demo nginx vhost config file
     echo "Create demo Nginx vHost config file ..."
     echo ""
     sleep 1
-    cat > /etc/nginx/conf.d/writebash.com.conf <<"EOF"
+    cat > /etc/nginx/conf.d/default.conf <<"EOF"
 server {
     listen 80;
     listen [::]:80;
 
-    root /etc/nginx/html;
+    root /var/www;
     index index.php index.html index.htm;
 
-    server_name 192.168.56.30;
+    server_name localhost;
 
     location / {
         try_files $uri $uri/ =404;
@@ -196,7 +197,8 @@ EOF
     rm /var/www/fusio/fusio_1.7.0.zip /var/www/fusio/composer.lock
     cd /var/www/fusio
     composer install
-
+    php /var/www/fusio/bin/fusio install
+    php /var/www/fusio/bin/fusio adduser
 
 
     # Restart nginx and php-fpm
@@ -206,8 +208,8 @@ EOF
     systemctl restart nginx
     systemctl restart php7.3-fpm
 
-    echo ""
-    echo "You can access http://YOUR-SERVER-IP/info.php to see more informations about PHP"
+    echo "Done!"
+    #echo "You can access http://YOUR-SERVER-IP/info.php to see more informations about PHP"
     sleep 1
 }
 
