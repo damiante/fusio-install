@@ -25,7 +25,7 @@
 f_check_root () {
     if (( $EUID == 0 )); then
         # If user is root, continue to function f_sub_main
-        f_sub_main
+        return true
     else
         # If user not is root, print message and exit script
         echo "Please run this script by user root !"
