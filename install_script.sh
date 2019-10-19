@@ -106,7 +106,7 @@ f_install_lemp () {
     echo "What was the root MariaDB password you chose?"
     read -sp 'Password: ' passvar
     systemctl enable mysql && systemctl start mysql
-    mysql -u root -p $passvar -e "create table fusio;"
+    mysql -u root -p $passvar -e "create database fusio;"
     echo ""
     sleep 1
 
