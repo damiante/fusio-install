@@ -107,8 +107,10 @@ f_install_lemp () {
 
     # Initialise MariaDB for Fusio use
     mysql -u root -e "CREATE DATABASE fusio;
-    CREATE USER $fusio_db_user IDENTIFIED BY \'$fusio_db_password\';
-    GRANT ALL ON fusio.* TO $fusio_db_user;"
+    CREATE USER $fusio_db_user;
+    SET PASSWORD FOR $fusio_db_user = PASSWORD('$fusio_password');
+    GRANT ALL ON fusio.* TO $fusio_db_user;
+    FLUSH PRIVILIGES;"
     echo "Fusio database and user created"
     echo ""
     sleep 1
