@@ -103,11 +103,13 @@ f_install_lemp () {
     echo ""
     sleep 1
     apt install mariadb-server -y
-    echo "What was the root MariaDB password you chose?"
-    read -sp 'Password: ' passvar
     systemctl enable mysql && systemctl start mysql
-    mysql -u root -p $passvar -e "create database fusio;"
-    echo "Fusio database created"
+
+    # Initialise MariaDB for Fusio use
+    mysql -u root -e "CREATE DATABASE fusio;
+    CREATE USER $fusio_db_user IDENTIFIED BY \'$fusio_db_password\';
+    GRANT ALL ON fusio.* TO $fusio_db_user;"
+    echo "Fusio database and user created"
     echo ""
     sleep 1
 
@@ -206,6 +208,9 @@ EOF
     composer install
     php /var/www/fusio/bin/fusio install
     php /var/www/fusio/bin/fusio adduser
+    sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/127\.0\.0\.1\/fusio\/public\"/" /var/www/fusio/.env
+    sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
+    sed -i "s/FUSIO_DB_PW=.*/FUSIO_DB_PW=\"$fusio_db_password\"/" /var/www/fusio/.env
 
 
     # Restart nginx and php-fpm
@@ -215,7 +220,7 @@ EOF
     systemctl restart nginx
     systemctl restart php7.3-fpm
 
-    echo "Done!"
+    echo "Done! Your Fusio instance is available at http://localhost/fusio/public/fusio"
     #echo "You can access http://YOUR-SERVER-IP/info.php to see more informations about PHP"
     sleep 1
 }
@@ -223,6 +228,8 @@ EOF
 # The sub main function, use to call neccessary functions of installation
 f_sub_main () {
     #f_update_os
+    fusio_db_user="fusio_admin"
+    fusio_db_password="fusio_password"
     f_install_lemp
 }
 
