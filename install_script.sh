@@ -211,6 +211,7 @@ EOF
     sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/127\.0\.0\.1\/fusio\/public\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_PW=.*/FUSIO_DB_PW=\"$fusio_db_password\"/" /var/www/fusio/.env
+    chmod -R 777 /var/www/fusio/cache
 
 
     # Restart nginx and php-fpm
@@ -219,6 +220,7 @@ EOF
     sleep 1
     systemctl restart nginx
     systemctl restart php7.3-fpm
+    systemctl restart mysql
 
     echo "Done! Your Fusio instance is available at http://localhost/fusio/public/fusio"
     #echo "You can access http://YOUR-SERVER-IP/info.php to see more informations about PHP"
