@@ -108,7 +108,7 @@ f_install_lemp () {
     # Initialise MariaDB for Fusio use
     mysql -u root -e "CREATE DATABASE fusio;
     CREATE USER $fusio_db_user;
-    SET PASSWORD FOR $fusio_db_user = PASSWORD('$fusio_password');
+    SET PASSWORD FOR $fusio_db_user = PASSWORD('$fusio_db_password');
     GRANT ALL ON fusio.* TO $fusio_db_user;
     FLUSH PRIVILIGES;"
     echo "Fusio database and user created"
@@ -123,7 +123,7 @@ f_install_lemp () {
 
     # Add unofficial repository PHP 7.3 to server Debian 8
     apt install software-properties-common python-software-properties -y
-    add-apt-repository ppa:ondrej/php
+    add-apt-repository ppa:ondrej/php -y
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C
 
     echo "Update packages from Dotdeb repository ..."
@@ -196,7 +196,7 @@ EOF
     # Install Composer and Fusio
     echo "Installing Composer..."
     echo ""
-    apt install composer
+    apt install composer -y
 
     echo "Installing Fusio..."
     echo ""
