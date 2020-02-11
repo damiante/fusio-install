@@ -277,8 +277,9 @@ do_fusio_install () {
 # The main function
 main () {
     check_root
-    sub_main
+    do_fusio_install
 }
+
 main
 
 exit
