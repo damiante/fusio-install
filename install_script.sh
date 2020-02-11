@@ -22,7 +22,7 @@
 # 5. f_main: the main function, add your functions to this place
 
 # Function check user root
-f_check_root () {
+check_root () {
     if (( $EUID == 0 )); then
         # If user is root, continue to function f_sub_main
         return true
@@ -34,7 +34,7 @@ f_check_root () {
 }
 
 # Function update os
-f_update_os () {
+update_os () {
     echo "Starting update os ..."
     echo ""
     sleep 1
@@ -44,8 +44,8 @@ f_update_os () {
     sleep 1
 }
 
-# Function install LEMP stack
-f_install_lemp () {
+install_nginx (){
+	
     ########## INSTALL NGINX ##########
     echo "Start install nginx ..."
     echo ""
@@ -77,6 +77,9 @@ f_install_lemp () {
     systemctl enable nginx && systemctl start nginx
     echo ""
     sleep 1
+}
+
+install_mariadb () {
 
     ########## INSTALL MARIADB ##########
     echo "Start install MariaDB server ..."
@@ -105,6 +108,10 @@ f_install_lemp () {
     apt install mariadb-server -y
     systemctl enable mysql && systemctl start mysql
 
+}
+
+fusio_mariadb_init () {
+
     # Initialise MariaDB for Fusio use
     mysql -u root -e "CREATE DATABASE fusio;
     CREATE USER $fusio_db_user;
@@ -114,6 +121,9 @@ f_install_lemp () {
     echo "Fusio database and user created"
     echo ""
     sleep 1
+}
+
+install_php7 () {
 
     ########## INSTALL PHP7 ##########
     # This is unofficial repository, it's up to you if you want to use it.
@@ -139,6 +149,9 @@ f_install_lemp () {
     apt install php7.3 php7.3-cli php7.3-common php7.3-fpm php7.3-gd php7.3-mysql php7.3-xml php7.3-soap -y
     echo ""
     sleep 1
+}
+
+configure_php_fpm_nginx () {
 
     # Config to make PHP-FPM working with Nginx
     echo "Config to make PHP-FPM working with Nginx ..."
@@ -192,6 +205,9 @@ server {
     }
 }
 EOF
+}
+
+fusio_install () {
 
     # Install Composer and Fusio
     echo "Installing Composer..."
@@ -214,7 +230,9 @@ EOF
     sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_PW=.*/FUSIO_DB_PW=\"$fusio_db_password\"/" /var/www/fusio/.env
     chmod -R 777 /var/www/fusio/cache
+}
 
+restart_lemp_services () {
 
     # Restart nginx and php-fpm
     echo "Restart Nginx & PHP-FPM ..."
@@ -224,24 +242,43 @@ EOF
     systemctl restart php7.3-fpm
     systemctl restart mysql
 
+}
+
+# Function install LEMP stack
+install_lemp_fusio () {
+
+    install_nginx
+
+    install_mariadb
+    fusio_mariadb_init
+
+    install_php7
+
+    configure_php_fpm_nginx 
+    
+    install_fusio
+    
+    restart_lemp_services
+
+
     echo "Done! Your Fusio instance is available at http://localhost/fusio/public/fusio"
     #echo "You can access http://YOUR-SERVER-IP/info.php to see more informations about PHP"
     sleep 1
 }
 
 # The sub main function, use to call neccessary functions of installation
-f_sub_main () {
-    #f_update_os
+do_fusio_install () {
+    update_os
     fusio_db_user="fusio_admin"
     fusio_db_password="fusio_password"
-    f_install_lemp
+    install_lemp_fusio
 }
 
 # The main function
-f_main () {
-    f_check_root
-    f_sub_main
+main () {
+    check_root
+    sub_main
 }
-f_main
+main
 
 exit
