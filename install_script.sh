@@ -151,26 +151,7 @@ install_php7 () {
     sleep 1
 }
 
-configure_php_fpm_nginx () {
-
-    # Config to make PHP-FPM working with Nginx
-    echo "Config to make PHP-FPM working with Nginx ..."
-    echo ""
-    sleep 1
-    sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=1/g' /etc/php/7.3/fpm/php.ini
-    sed -i 's:user = www-data:user = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
-    sed -i 's:group = www-data:group = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
-    sed -i 's:listen.owner = www-data:listen.owner = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
-    sed -i 's:listen.group = www-data:listen.group = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
-    sed -i 's:;listen.mode = 0660:listen.mode = 0660:g' /etc/php/7.3/fpm/pool.d/www.conf
-
-    # Create web root directory and php info file
-    #echo "Create web root directory and PHP info file ..."
-    #echo ""
-    #sleep 1
-    #mkdir /etc/nginx/html
-    #echo "<?php phpinfo(); ?>" > /etc/nginx/html/info.php
-    #chown -R nginx:nginx /etc/nginx/html
+dump_nginx_default_conf () {
 
     # Create demo nginx vhost config file
     echo "Create demo Nginx vHost config file ..."
@@ -205,6 +186,29 @@ server {
     }
 }
 EOF
+}
+
+configure_php_fpm_nginx () {
+
+    # Config to make PHP-FPM working with Nginx
+    echo "Config to make PHP-FPM working with Nginx ..."
+    echo ""
+    sleep 1
+    sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=1/g' /etc/php/7.3/fpm/php.ini
+    sed -i 's:user = www-data:user = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
+    sed -i 's:group = www-data:group = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
+    sed -i 's:listen.owner = www-data:listen.owner = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
+    sed -i 's:listen.group = www-data:listen.group = nginx:g' /etc/php/7.3/fpm/pool.d/www.conf
+    sed -i 's:;listen.mode = 0660:listen.mode = 0660:g' /etc/php/7.3/fpm/pool.d/www.conf
+
+    # Create web root directory and php info file
+    #echo "Create web root directory and PHP info file ..."
+    #echo ""
+    #sleep 1
+    #mkdir /etc/nginx/html
+    #echo "<?php phpinfo(); ?>" > /etc/nginx/html/info.php
+    #chown -R nginx:nginx /etc/nginx/html
+
 }
 
 fusio_install () {
@@ -255,7 +259,8 @@ install_lemp_fusio () {
     install_php7
 
     configure_php_fpm_nginx 
-    
+    dump_nginx_default_conf    
+
     install_fusio
     
     restart_lemp_services
