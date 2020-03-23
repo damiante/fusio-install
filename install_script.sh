@@ -220,7 +220,7 @@ fusio_install () {
 
     echo "Installing Fusio..."
     echo ""
-    mkdir /var/www/fusio
+    mkdir -p  /var/www/fusio
     wget -P /var/www/fusio https://github.com/apioo/fusio/releases/download/v1.7.0/fusio_1.7.0.zip
     unzip /var/www/fusio/fusio_1.7.0.zip -d /var/www/fusio
     chown -R nginx:nginx /var/www/fusio
