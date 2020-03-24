@@ -269,7 +269,7 @@ install_lemp_fusio () {
     restart_lemp_services
 
 
-    echo "Done! Your Fusio instance is available at http://localhost/"
+    echo "Done! Your Fusio instance is available at http://localhost/public/"
     sleep 1
 }
 
