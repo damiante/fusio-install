@@ -229,8 +229,8 @@ install_fusio () {
     rm /var/www/fusio/fusio_1.7.0.zip /var/www/fusio/composer.lock
     cd /var/www/fusio
     composer install
-    php /var/www/fusio/bin/fusio install
-    php /var/www/fusio/bin/fusio adduser
+    echo "y" | php /var/www/fusio/bin/fusio install
+    echo "$fusio_user\n$fusio_password" | php /var/www/fusio/bin/fusio adduser
     sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/127\.0\.0\.1\/fusio\/public\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_PW=.*/FUSIO_DB_PW=\"$fusio_db_password\"/" /var/www/fusio/.env
@@ -277,6 +277,8 @@ do_fusio_install () {
     update_os
     fusio_db_user="fusio_admin"
     fusio_db_password="fusio_password"
+	fusio_user="admin"
+	fusio_password="admin123"
     install_lemp_fusio
 }
 
