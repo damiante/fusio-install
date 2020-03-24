@@ -230,7 +230,7 @@ install_fusio () {
     cd /var/www/fusio
     composer install
     printf "y" | php /var/www/fusio/bin/fusio install
-	php /var/www/fusio/bin/fusio adduser -s 1 -u $fusio_user -e $fusio_email -p $fusio_password
+    php /var/www/fusio/bin/fusio adduser -s 1 -u $fusio_user -e $fusio_email -p $fusio_password
 
     sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/127\.0\.0\.1\/fusio\/public\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
