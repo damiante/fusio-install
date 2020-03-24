@@ -211,7 +211,7 @@ configure_php_fpm_nginx () {
 
 }
 
-fusio_install () {
+install_fusio () {
 
     # Install Composer and Fusio
     echo "Installing Composer..."
