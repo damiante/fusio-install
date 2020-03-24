@@ -157,12 +157,13 @@ dump_nginx_default_conf () {
     echo "Create demo Nginx vHost config file ..."
     echo ""
     sleep 1
-    cat > /etc/nginx/conf.d/default.conf <<"EOF"
+	rm /etc/nginx/conf.d/default.conf
+    cat > /etc/nginx/conf.d/$fusio_app_url.conf <<"EOF"
 server {
     listen 80;
     listen [::]:80;
 
-    root /var/www;
+    root /var/www/fusio;
     index index.php index.html index.htm;
 
     server_name localhost;
@@ -225,14 +226,14 @@ install_fusio () {
 	apt install unzip
     unzip /var/www/fusio/fusio_1.7.0.zip -d /var/www/fusio
     chown -R nginx:nginx /var/www/fusio
-    chmod -r 755 /var/www/fusio
+    chmod -R 755 /var/www/fusio
     rm /var/www/fusio/fusio_1.7.0.zip /var/www/fusio/composer.lock
     cd /var/www/fusio
     composer install
     printf "y" | php /var/www/fusio/bin/fusio install
     php /var/www/fusio/bin/fusio adduser -s 1 -u $fusio_user -e $fusio_email -p $fusio_password
 
-    sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/127\.0\.0\.1\/fusio\/public\"/" /var/www/fusio/.env
+    sed -i "s/FUSIO_URL=.*/FUSIO_URL=\"http:\/\/localhost\/public\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_USER=.*/FUSIO_DB_USER=\"$fusio_db_user\"/" /var/www/fusio/.env
     sed -i "s/FUSIO_DB_PW=.*/FUSIO_DB_PW=\"$fusio_db_password\"/" /var/www/fusio/.env
     chmod -R 777 /var/www/fusio/cache
@@ -281,6 +282,7 @@ do_fusio_install () {
 	fusio_user="admin"
 	fusio_password="admin123"
 	fusio_email="test@example.com"
+	fusio_app_url="api.example.com"
     install_lemp_fusio
 }
 
