@@ -222,6 +222,7 @@ install_fusio () {
     echo ""
     mkdir -p  /var/www/fusio
     wget -P /var/www/fusio https://github.com/apioo/fusio/releases/download/v1.7.0/fusio_1.7.0.zip
+	apt install unzip
     unzip /var/www/fusio/fusio_1.7.0.zip -d /var/www/fusio
     chown -R nginx:nginx /var/www/fusio
     chmod -r 755 /var/www/fusio
