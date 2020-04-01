@@ -267,9 +267,10 @@ install_lemp_fusio () {
     install_fusio
     
     restart_lemp_services
+	
+	this_machine_ip=$(ip route get 1 | awk '{print $NF;exit}')
 
-
-    echo "Done! Your Fusio instance is available at http://localhost/public/"
+    echo "Done! Your Fusio instance is available at http://"$this_machine_ip"/public/fusio"
     sleep 1
 }
 
@@ -283,7 +284,9 @@ do_fusio_install () {
 	fusio_email="test@example.com"
 	fusio_app_url="api.example.com"
     install_lemp_fusio
+
 }
+
 
 # The main function
 main () {
