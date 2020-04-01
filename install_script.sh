@@ -169,7 +169,7 @@ server {
     server_name localhost;
 
     location / {
-        try_files $uri $uri/ =404;
+        try_files $uri $uri/ /public/index.php$uri;
     }
 
     location ~ ^.+.php {
